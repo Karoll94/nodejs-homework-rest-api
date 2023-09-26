@@ -1,6 +1,9 @@
-const express = require('express')
-const logger = require('morgan')
-const cors = require('cors')
+const express = require('express');
+const logger = require('morgan');
+const cors = require('cors');
+const connection = require("./db/connection");
+
+
 
 const contactsRouter = require('./routes/api/contacts')
 
@@ -14,6 +17,7 @@ app.use(express.json())
 
 app.use('/api/contacts', contactsRouter)
 
+
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
 })
@@ -21,5 +25,15 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message })
 })
+
+connection.
+then(result =>{
+      app.listen(process.env.PORT || 8081); 
+      console.log("Database connection successful")
+  }).catch((error) => {
+    console.log(`Server not running. 
+Error message: ${error.message}`);
+    process.exit(1);
+  });
 
 module.exports = app
