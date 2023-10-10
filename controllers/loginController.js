@@ -4,7 +4,7 @@ const secret = process.env.SECRET;
 const jwt = require('jsonwebtoken');
 
 const login = async (req, res, next)=>{
-    const {email, password} = req.body;
+    const {email, password } = req.body;
     const user = await userModel.getUserByEmail(email);
 
 if ( !user || !user.password) {
@@ -28,6 +28,7 @@ res.json({
         token,
     }
 });
+
 };
 
 module.exports = {
