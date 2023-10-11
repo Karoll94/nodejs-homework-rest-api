@@ -7,17 +7,7 @@ const authorizationController = require("../../controllers/authorizationControll
 const auth = require("../../middleware/auth.js");
 
 
-
-router.get("/", controller.getAllContacts);
-router.get("/:contactId", controller.ContactById);
-router.delete("/:contactId", controller.deleteContact);
-router.post("/", controller.createContact);
-router.put("/:contactId", controller.modifyContact);
-router.patch("/:contactId/favorite", controller.updateFavorite);
-
-
 const invalidatedTokens = new Set();
-
 const validToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(" ")[1];
@@ -34,12 +24,17 @@ const validToken = (req, res, next) => {
 };
 
 
+router.get("/contacts", validToken, auth, controller.getAllContacts);
+router.get("/contacts/:contactId", validToken, auth, controller.ContactById);
+router.delete("/contacts/:contactId", validToken, auth, controller.deleteContact);
+router.post("/contacts", validToken, auth, controller.createContact);
+router.put("/contacts/:contactId", validToken, auth, controller.modifyContact);
+router.patch("/contacts/:contactId/favorite", validToken, auth, controller.updateFavorite);
+
+
 router.post("/users/signup", signupController.signup);
 router.post("/users/login", loginController.login);
-
-
 router.get("/users/current", validToken, auth, authorizationController.authorization);
-
 router.post("/users/logout", validToken, auth,  (req, res, next) => {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(" ")[1];
