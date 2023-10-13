@@ -3,8 +3,6 @@ const logger = require('morgan');
 const cors = require('cors');
 const connection = require("./db/connection");
 
-
-
 const contactsRouter = require('./routes/api/contacts')
 
 const app = express()
@@ -15,7 +13,10 @@ app.use(logger(formatsLogger))
 app.use(cors())
 app.use(express.json())
 
-app.use('/api/contacts', contactsRouter)
+app.use('/api', contactsRouter)
+
+
+require('./config/configPassport')
 
 
 app.use((req, res) => {
@@ -35,5 +36,8 @@ then(result =>{
 Error message: ${error.message}`);
     process.exit(1);
   });
+
+
+
 
 module.exports = app
