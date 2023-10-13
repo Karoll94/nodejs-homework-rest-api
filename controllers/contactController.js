@@ -2,8 +2,10 @@ const { rules } = require("eslint-config-prettier");
 const modelcontact = require("../models/contacts");
 
 const getAllContacts = async (req, res, next) => {
+    const owner = req.user._id;
+    
     try {
-      const results = await modelcontact.listContacts();
+      const results = await modelcontact.listContacts({owner});
       res.json({
         status: "success",
         code: 200,
@@ -71,12 +73,14 @@ const deleteContact = async (req,res,next) =>{
 
 const createContact = async (req,res,next)=>{
   const {name, email, phone, favorite} = req.body;
+  const owner = req.user._id;
   try {
     const result = await modelcontact.addContact({
       name,
       email,
       phone,
-      favorite
+      favorite,
+      owner
     });
     res.json({
       status: 'Success',
