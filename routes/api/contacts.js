@@ -9,6 +9,9 @@ const auth = require("../../middleware/auth.js");
 const updateAvatarCtrl = require("../../controllers/updateAvatar")
 const {upload, ctrlWrapper} = require("../../middleware");
 
+const emailVerify = require("../../controllers/emailVerify");
+const resendVerificationEmailCtrl = require("../../controllers/resendEmail"); 
+
 
 const invalidatedTokens = new Set();
 const validToken = (req, res, next) => {
@@ -42,6 +45,10 @@ router.get("/users/current", validToken, auth, authorizationController.authoriza
 
 router.patch("/users/avatars",validToken, auth, upload.single("avatar"), ctrlWrapper(updateAvatarCtrl) );
 
+
+
+router.get("/users/verify/:verificationToken", validToken, emailVerify);
+router.post("/users/verify", resendVerificationEmailCtrl);
 
 router.post("/users/logout", validToken, auth,  (req, res, next) => {
   const authHeader = req.headers.authorization;
